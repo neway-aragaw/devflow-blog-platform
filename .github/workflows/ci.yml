@@ -36,7 +36,7 @@ jobs:
       - name: Build and run containers
         run: |
           docker-compose up -d --build
-          sleep 10  # Wait for services to start
+          sleep 10  # wait for services to fully start
 
       - name: Check backend health
         run: curl --fail http://backend:8787/api/posts || exit 1
@@ -46,3 +46,17 @@ jobs:
 
       - name: Shut down containers
         run: docker-compose down
+
+      - name: Notify Slack - Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"✅ *DevFlow CI* passed on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack - Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"❌ *DevFlow CI* failed on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
