@@ -24,7 +24,7 @@ jobs:
 
       - name: Create .env files (if needed)
         run: |
-          echo "VITE_BACKEND_URL=http://localhost:8787/api" > frontend/.env
+          echo "VITE_BACKEND_URL=http://backend:8787/api" > frontend/.env
           echo "PORT=8787" > backend/.env
 
       - name: Install Docker Compose
@@ -36,13 +36,13 @@ jobs:
       - name: Build and run containers
         run: |
           docker-compose up -d --build
-          sleep 10
+          sleep 10  # Wait for services to start
 
       - name: Check backend health
-        run: curl --fail http://localhost:8787/api/posts || exit 1
+        run: curl --fail http://backend:8787/api/posts || exit 1
 
       - name: Check frontend health
-        run: curl --fail http://localhost:5173 || exit 1
+        run: curl --fail http://frontend:5173 || exit 1
 
       - name: Shut down containers
         run: docker-compose down
