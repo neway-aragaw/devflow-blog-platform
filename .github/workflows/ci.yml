@@ -38,12 +38,12 @@ jobs:
           docker-compose up -d --build
           sleep 15
 
-      - name: Install Trivy
+      - name: Install Trivy (latest)
         run: |
           sudo apt-get update
-          sudo apt-get install wget -y
-          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.1_Linux-64bit.deb
-          sudo dpkg -i trivy_0.50.1_Linux-64bit.deb
+          sudo apt-get install wget curl -y
+          wget $(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep browser_download_url | grep Linux-64bit.deb | cut -d '"' -f 4)
+          sudo dpkg -i trivy_*_Linux-64bit.deb
 
       - name: Scan backend image with Trivy
         run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
