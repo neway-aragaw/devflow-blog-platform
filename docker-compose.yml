@@ -2,43 +2,25 @@ version: '3.9'
 
 services:
   backend:
+    container_name: medium-backend
     build: ./backend
-    image: devflow-backend
-    container_name: backend
     ports:
       - "8787:8787"
+    volumes:
+      - ./backend:/app
     environment:
-      - PORT=8787
-      - AWS_REGION=us-east-1
-      - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
-    depends_on:
-      - dynamodb-local
+      - NODE_ENV=development
+    command: ["npm", "run", "dev"]
 
   frontend:
+    container_name: medium-frontend
     build: ./frontend
-    image: devflow-frontend
-    container_name: frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
     environment:
-      - VITE_BACKEND_URL=http://backend:8787/api
-    depends_on:
-      - backend
-
-  dynamodb-local:
-    image: amazon/dynamodb-local
-    container_name: dynamodb-local
-    ports:
-      - "8000:8000"
-
-  healthcheck:
-    image: curlimages/curl:latest
-    container_name: backend-healthcheck
-    depends_on:
-      - backend
-    entrypoint: >
-      sh -c "
-        echo '🩺 Waiting for backend to be ready...' &&
-        sleep 10 &&
-        curl --fail http://backend:8787/api/posts &&
-        echo '✅ Backend is healthy!'"
+      - VITE_BACKEND_URL=http://localhost:8787/api
+    command: ["npm", "run", "dev"]
