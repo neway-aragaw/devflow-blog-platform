@@ -36,7 +36,23 @@ jobs:
       - name: Build and run containers
         run: |
           docker-compose up -d --build
-          sleep 15  # Allow healthcheck container to test backend
+          sleep 15
+
+      - name: Scan backend image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: backend
+          format: table
+          ignore-unfixed: true
+          exit-code: 1
+
+      - name: Scan frontend image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: frontend
+          format: table
+          ignore-unfixed: true
+          exit-code: 1
 
       - name: Shut down containers
         run: docker-compose down
@@ -45,12 +61,12 @@ jobs:
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"✅ *DevFlow CI* passed on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          --data '{"text":"✅ *DevFlow CI* passed (Trivy scan clean) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Slack - Failure
         if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"❌ *DevFlow CI* failed on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          --data '{"text":"❌ *DevFlow CI* failed (Trivy or build error) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
