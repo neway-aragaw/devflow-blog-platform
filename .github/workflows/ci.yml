@@ -38,6 +38,10 @@ jobs:
           docker-compose up -d --build
           sleep 15
 
+      - name: Install Trivy
+        run: |
+          curl -sfL https://aquasecurity.github.io/trivy/install.sh | sh -s -- -b /usr/local/bin
+
       - name: Scan backend image with Trivy
         run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
 
