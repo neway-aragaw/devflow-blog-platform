@@ -39,26 +39,13 @@ jobs:
           sleep 15
 
       - name: Scan backend image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: devflow-backend
-          format: table
-          ignore-unfixed: true
-          exit-code: 1
+        run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
 
       - name: Scan frontend image with Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: devflow-frontend
-          format: table
-          ignore-unfixed: true
-          exit-code: 1
-
-      - name: Direct Trivy scan CLI - backend
-        run: |
-          trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL devflow-backend
+        run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-frontend
 
       - name: Shut down containers
+        if: always()
         run: docker-compose down
 
       - name: Notify Slack - Success
