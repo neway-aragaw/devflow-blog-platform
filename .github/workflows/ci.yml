@@ -33,7 +33,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Build and run containers
+      - name: Build and run containers with image tags
         run: |
           docker-compose up -d --build
           sleep 15
@@ -44,6 +44,9 @@ jobs:
           sudo apt-get install wget curl -y
           wget $(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep browser_download_url | grep Linux-64bit.deb | cut -d '"' -f 4)
           sudo dpkg -i trivy_*_Linux-64bit.deb
+
+      - name: List built Docker images (debug)
+        run: docker images
 
       - name: Scan backend image with Trivy
         run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
