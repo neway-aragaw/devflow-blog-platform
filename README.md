@@ -1,5 +1,5 @@
 # Medium Clone
-
+Hey
 Welcome to the Medium Clone ! This website replicates essential Medium features, offering a comprehensive blogging experience. Users can sign up, sign in, view all blogs on the homepage, read individual blogs, and create new blog posts. The standout feature of our app is the powerful and user-friendly rich text editor powered by TipTap.
 
 ## Features
