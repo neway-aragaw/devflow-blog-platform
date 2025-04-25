@@ -1,8 +1,8 @@
-name: DevFlow CI for Web app
+name: DevFlow CI
 
 on:
   push:
-    branches: [main, "hotfix/**"]
+    branches: [main, 'hotfix/**']
   pull_request:
     branches: [main]
 
@@ -40,7 +40,10 @@ jobs:
 
       - name: Install Trivy
         run: |
-          curl -sfL https://aquasecurity.github.io/trivy/install.sh | sh -s -- -b /usr/local/bin
+          sudo apt-get update
+          sudo apt-get install wget -y
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.50.1_Linux-64bit.deb
 
       - name: Scan backend image with Trivy
         run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
