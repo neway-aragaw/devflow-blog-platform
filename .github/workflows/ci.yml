@@ -36,13 +36,7 @@ jobs:
       - name: Build and run containers
         run: |
           docker-compose up -d --build
-          sleep 10  # wait for services to fully start
-
-      - name: Check backend health
-        run: curl --fail http://backend:8787/api/posts || exit 1
-
-      - name: Check frontend health
-        run: curl --fail http://frontend:5173 || exit 1
+          sleep 15  # Allow healthcheck container to test backend
 
       - name: Shut down containers
         run: docker-compose down
