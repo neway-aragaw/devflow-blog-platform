@@ -1,0 +1,42 @@
+name: DevFlow CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker-compose-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Create .env files (if needed)
+        run: |
+          echo "VITE_BACKEND_URL=http://localhost:8787/api" > frontend/.env
+          echo "PORT=8787" > backend/.env
+
+      - name: Build and run containers
+        run: |
+          docker-compose up -d --build
+          sleep 10  # wait for services to fully start
+
+      - name: Check backend health
+        run: curl --fail http://localhost:8787/api/posts || exit 1
+
+      - name: Check frontend health
+        run: curl --fail http://localhost:5173 || exit 1
+
+      - name: Shut down containers
+        run: docker-compose down
