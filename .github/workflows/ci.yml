@@ -1,8 +1,8 @@
-name: DevFlow CI
+name: DevFlow CI for Web app
 
 on:
   push:
-    branches: [main, 'hotfix/**']
+    branches: [main, "hotfix/**"]
   pull_request:
     branches: [main]
 
