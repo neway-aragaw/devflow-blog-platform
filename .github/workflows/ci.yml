@@ -41,7 +41,7 @@ jobs:
       - name: Scan backend image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: backend
+          image-ref: devflow-backend
           format: table
           ignore-unfixed: true
           exit-code: 1
@@ -49,10 +49,11 @@ jobs:
       - name: Scan frontend image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: frontend
+          image-ref: devflow-frontend
           format: table
           ignore-unfixed: true
           exit-code: 1
+
 
       - name: Shut down containers
         run: docker-compose down

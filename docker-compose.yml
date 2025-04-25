@@ -3,6 +3,7 @@ version: '3.9'
 services:
   backend:
     build: ./backend
+    image: devflow-backend
     container_name: backend
     ports:
       - "8787:8787"
@@ -15,6 +16,7 @@ services:
 
   frontend:
     build: ./frontend
+    image: devflow-frontend
     container_name: frontend
     ports:
       - "5173:5173"
