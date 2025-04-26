@@ -7,8 +7,8 @@ on:
       - "frontend/**"
   pull_request:
     branches: [main, develop, github-actions]
-    paths:
-      - "frontend/**"
+    # paths:
+    #   - "frontend/**"
 
 env:
   NODE_VERSION: 18.x
