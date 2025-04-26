@@ -46,6 +46,4 @@ jobs:
         working-directory: backend
         run: |
           npm install
-          npm run build # Or tsc for TypeScript
-          mkdir -p backend/dist
-          cp -r backend/dist backend/dist
+          npm run build
