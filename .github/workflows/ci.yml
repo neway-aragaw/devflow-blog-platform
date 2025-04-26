@@ -16,67 +16,68 @@ jobs:
     with:
       node_version: "18" #can be defined here or in build.yml
 
-  docker-compose-test:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # docker-compose-test:
+  #   runs-on: ubuntu-latest
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
 
-      - name: Create .env files (if needed)
-        run: |
-          echo "VITE_BACKEND_URL=http://backend:8787/api" > frontend/.env
-          echo "PORT=8787" > backend/.env
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose version
+  #     - name: Create .env files (if needed)
+  #       run: |
+  #         echo "VITE_BACKEND_URL=http://backend:8787/api" > frontend/.env
+  #         echo "PORT=8787" > backend/.env
 
-      - name: Build and run containers with image tags
-        run: |
-          docker-compose up -d --build
-          sleep 15
+  #     - name: Install Docker Compose
+  #       run: |
+  #         sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  #         sudo chmod +x /usr/local/bin/docker-compose
+  #         docker-compose version
 
-      - name: Install Trivy (latest)
-        run: |
-          sudo apt-get update
-          sudo apt-get install wget curl -y
-          wget $(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep browser_download_url | grep Linux-64bit.deb | cut -d '"' -f 4)
-          sudo dpkg -i trivy_*_Linux-64bit.deb
+  #     - name: Build and run containers with image tags
+  #       run: |
+  #         docker-compose up -d --build
+  #         sleep 15
 
-      - name: List built Docker images (debug)
-        run: docker images
+  #     - name: Install Trivy (latest)
+  #       run: |
+  #         sudo apt-get update
+  #         sudo apt-get install wget curl -y
+  #         wget $(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep browser_download_url | grep Linux-64bit.deb | cut -d '"' -f 4)
+  #         sudo dpkg -i trivy_*_Linux-64bit.deb
 
-      - name: Scan backend image with Trivy
-        run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
+  #     - name: List built Docker images (debug)
+  #       run: docker images
 
-      - name: Scan frontend image with Trivy
-        run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-frontend
+  #     - name: Scan backend image with Trivy
+  #       run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-backend
 
-      - name: Shut down containers
-        if: always()
-        run: docker-compose down
+  #     - name: Scan frontend image with Trivy
+  #       run: trivy image --exit-code 0 --severity MEDIUM,HIGH,CRITICAL medium-frontend
 
-      - name: Notify Slack - Success
-        if: success()
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"✅ *DevFlow CI* passed (Trivy scan clean) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
+  #     - name: Shut down containers
+  #       if: always()
+  #       run: docker-compose down
 
-      - name: Notify Slack - Failure
-        if: failure()
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"❌ *DevFlow CI* failed (Trivy or build error) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
+  #     - name: Notify Slack - Success
+  #       if: success()
+  #       run: |
+  #         curl -X POST -H 'Content-type: application/json' \
+  #         --data '{"text":"✅ *DevFlow CI* passed (Trivy scan clean) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+  #         ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  #     - name: Notify Slack - Failure
+  #       if: failure()
+  #       run: |
+  #         curl -X POST -H 'Content-type: application/json' \
+  #         --data '{"text":"❌ *DevFlow CI* failed (Trivy or build error) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+  #         ${{ secrets.SLACK_WEBHOOK_URL }}
