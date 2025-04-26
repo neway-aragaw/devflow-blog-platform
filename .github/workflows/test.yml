@@ -23,17 +23,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node_version }}
+
       # Frontend Test
       - name: Test Frontend
         working-directory: frontend
         run: |
           npm install
           npm test # Or yarn test
+
       # Backend Test
-    #   - name: Test Backend
-    #     working-directory: backend
-    #     env:
-    #       MONGODB_URI: ${{ secrets.MONGODB_URI }}
-    #     run: |
-    #       npm install
-    #       npm test # Or yarn test
+      - name: Test Backend
+        working-directory: backend
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          npm install
+          npm test # Or yarn test
