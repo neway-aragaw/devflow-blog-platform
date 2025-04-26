@@ -31,19 +31,19 @@ jobs:
         with:
           node-version: ${{ inputs.node_version }}
 
-      #   # Frontend Build
-      #   - name: Build Frontend
-      #     working-directory: frontend
-      #     run: |
-      #       npm install
-      #       npm run build
-      #       # Example for Next.js, adjust as needed
-      #       mkdir -p frontend/out
-      #       cp -r dist/* frontend/out
-
-      #   Backend Build
-      - name: Build Backend
-        working-directory: backend
+      # Frontend Build
+      - name: Build Frontend
+        working-directory: frontend
         run: |
           npm install
           npm run build
+          # Example for Next.js, adjust as needed
+          mkdir -p frontend/out
+          cp -r dist/* frontend/out
+
+      #   Backend Build
+    #   - name: Build Backend
+    #     working-directory: backend
+    #     run: |
+    #       npm install
+    #       npm run build

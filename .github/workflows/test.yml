@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      node_version:
+        description: "Node.js version to use"
+        type: string
+        default: "18"
+    secrets:
+      MONGODB_URI:
+        description: "MongoDB connection URI for backend tests"
+        required: true
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node_version }}
+      # Frontend Test
+      - name: Test Frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm test # Or yarn test
+      # Backend Test
+    #   - name: Test Backend
+    #     working-directory: backend
+    #     env:
+    #       MONGODB_URI: ${{ secrets.MONGODB_URI }}
+    #     run: |
+    #       npm install
+    #       npm test # Or yarn test
