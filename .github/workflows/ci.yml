@@ -10,19 +10,11 @@ on:
       - "backend/**"
 
 jobs:
-  deploy-frontend:
-    name: Deploy Frontend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: frontend-build
-
-      - name: Deploy to Vercel
-        run: echo "Deploying to Vercel..."
+  build_and_test:
+    name: Build and Test
+    uses: ./.github/workflows/build.yml
+    with:
+      node_version: "18" #can be defined here or in build.yml
 
   docker-compose-test:
     runs-on: ubuntu-latest
