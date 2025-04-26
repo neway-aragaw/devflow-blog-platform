@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: your-docker-repo/frontend
+  tag: dev
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
