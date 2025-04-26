@@ -10,12 +10,19 @@ on:
       - "backend/**"
 
 jobs:
-  build_and_test:
-    name: Build and Test
+  build:
+    name: Build
     uses: ./.github/workflows/build.yml
     with:
       node_version: "18" #can be defined here or in build.yml
-
+  test:
+    name: Run Tests
+    needs: build
+    uses: ./.github/workflows/test.yml
+    with:
+      node_version: "18"
+    secrets:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
   # docker-compose-test:
   #   runs-on: ubuntu-latest
