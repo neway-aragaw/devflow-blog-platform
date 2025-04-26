@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, "hotfix/**", workflow]
   pull_request:
-    branches: [main]
+    branches: [main, "hotfix/**", workflow]
 
 jobs:
   docker-compose-test:
