@@ -6,7 +6,7 @@
     "strict": true,
     "skipLibCheck": true,
     "lib": ["ESNext"],
-    "types": ["@cloudflare/workers-types"],
+    "types": ["@cloudflare/workers-types", "jest"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "outDir": "dist", // Specify the output directory for compiled files
