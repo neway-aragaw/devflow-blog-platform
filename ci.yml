@@ -2,7 +2,7 @@ name: DevFlow CI
 
 on:
   push:
-    branches: [main, 'hotfix/**']
+    branches: [main, "hotfix/**"]
   pull_request:
     branches: [main]
 
