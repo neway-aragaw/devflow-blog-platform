@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: your-docker-repo/frontend
+  repository: newnexus/medium-frontend
   tag: dev
   pullPolicy: IfNotPresent
 
