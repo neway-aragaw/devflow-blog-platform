@@ -11,9 +11,9 @@ on:
       frontend_build_path:
         description: "Path to the built frontend"
         value: ${{ jobs.build.outputs.frontend_build_path }}
-      backend_build_path:
-        description: "Path to the built backend"
-        value: ${{ jobs.build.outputs.backend_build_path }}
+    #   backend_build_path:
+    #     description: "Path to the built backend"
+    #     value: ${{ jobs.build.outputs.backend_build_path }}
 
 jobs:
   build:
@@ -39,13 +39,13 @@ jobs:
           npm run build
           # Example for Next.js, adjust as needed
           mkdir -p frontend/out
-          cp -r frontend/.next frontend/out
+          cp -r dist/* frontend/out
 
       # Backend Build
-      - name: Build Backend
-        working-directory: backend
-        run: |
-          npm install
-          npm run build # Or tsc for TypeScript
-          mkdir -p backend/dist
-          cp -r backend/dist backend/dist
+    #   - name: Build Backend
+    #     working-directory: backend
+    #     run: |
+    #       npm install
+    #       npm run build # Or tsc for TypeScript
+    #       mkdir -p backend/dist
+    #       cp -r backend/dist backend/dist
