@@ -23,6 +23,14 @@ jobs:
       node_version: "18"
     secrets:
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  deploy:
+    name: Deploy
+    needs: test
+    uses: ./.github/workflows/deploy.yml
+    with:
+      node_version: "18"
+      environment: "staging" #can be defined here or in deploy.yml
+
 
   # docker-compose-test:
   #   runs-on: ubuntu-latest
