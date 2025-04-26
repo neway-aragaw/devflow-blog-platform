@@ -1,12 +1,12 @@
-name: Frontend CI
-
+# name: Frontend CI
+name: DevFlow CI
 on:
   push:
     branches: [main, develop, github-actions]
     paths:
       - "frontend/**"
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, github-actions]
     paths:
       - "frontend/**"
 
