@@ -5,8 +5,25 @@ on:
     branches: [main, "hotfix/**", workflow]
   pull_request:
     branches: [main, "hotfix/**", workflow]
+    paths:
+      - "frontend/**"
+      - "backend/**"
 
 jobs:
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+
+      - name: Deploy to Vercel
+        run: echo "Deploying to Vercel..."
+
   docker-compose-test:
     runs-on: ubuntu-latest
 
