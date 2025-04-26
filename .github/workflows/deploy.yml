@@ -1,0 +1,54 @@
+name: Deploy
+on:
+  workflow_call:
+    inputs:
+      node_version:
+        description: "Node.js version to use"
+        type: string
+        default: "18"
+      environment:
+        description: "Deployment environment (e.g., staging, production)"
+        type: string
+        required: true
+    # secrets:
+    #   VERCEL_TOKEN:
+    #     description: "Vercel token for frontend deployment"
+    #     required: true
+    #   HEROKU_API_KEY:
+    #     description: "Heroku API key for backend deployment"
+    #     required: true
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Deploy Frontend
+        working-directory: frontend
+        run: echo "Deploying to Frontend application"
+
+        # run: |
+        #   npm install
+        #   npm run deploy  # e.g., vercel deploy
+        # env:
+        #   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        #   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }} # Add this
+        #   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} # Add this
+
+      - name: Deploy Backend
+        working-directory: backend
+        run: echo "Deploying to Backend application"
+
+        # run: |
+        #   npm install
+        #   npm run deploy # e.g., heroku deploy
+        # env:
+        #   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        #   HEROKU_APP_NAME: your-heroku-app-name #  Change this
