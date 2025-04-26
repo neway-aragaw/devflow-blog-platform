@@ -58,16 +58,29 @@ jobs:
         if: always()
         run: docker-compose down
 
-      - name: Notify Slack - Success (any branch)
+      - name: Set environment name
+        id: set-env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENVIRONMENT=Production" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == refs/heads/hotfix/* ]]; then
+            echo "ENVIRONMENT=Staging" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == refs/heads/feature/* ]]; then
+            echo "ENVIRONMENT=Dev" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=Unknown" >> $GITHUB_ENV
+          fi
+
+      - name: Notify Slack - Success
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"✅ *DevFlow CI* passed (Trivy scan clean) on branch `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          --data "{\"text\":\"✅ *DevFlow ${{ env.ENVIRONMENT }}* CI passed (Trivy scan clean) on branch \`${{ github.ref_name }}\` by \`${{ github.actor }}\`\"}" \
           ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Notify Slack - Failure (any branch)
+      - name: Notify Slack - Failure
         if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"❌ *DevFlow CI* failed (Trivy or build error) on branch `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          --data "{\"text\":\"❌ *DevFlow ${{ env.ENVIRONMENT }}* CI failed (Trivy or build error) on branch \`${{ github.ref_name }}\` by \`${{ github.actor }}\`\"}" \
           ${{ secrets.SLACK_WEBHOOK_URL }}
