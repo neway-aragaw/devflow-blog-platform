@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: newnexus/medium-frontend
+  tag: prod
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80

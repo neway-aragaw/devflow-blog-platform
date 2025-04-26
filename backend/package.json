@@ -2,16 +2,20 @@
   "name": "backend",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "build": "tsc",
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^5.16.2",
     "@prisma/extension-accelerate": "^1.1.0",
     "@sumitbhuia/medium_common": "^1.0.0",
-    "hono": "^4.4.12"
+    "hono": "^4.4.12",
+    "jest": "^29.7.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.14.10",
     "dotenv-cli": "^7.4.2",
     "prisma": "^5.16.2",
