@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.1
+    hooks:
+      - id: gitleaks
+        name: gitleaks-protect
+        entry: gitleaks protect
+        language: system
+        types: [text]
+        args: ["--staged", "--verbose"]
