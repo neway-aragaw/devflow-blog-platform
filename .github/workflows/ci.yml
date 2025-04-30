@@ -2,7 +2,7 @@ name: DevFlow CI
 
 on:
   push:
-    branches: [main, 'hotfix/**']
+    branches: [main, 'feature/**', 'hotfix/**']
   pull_request:
     branches: [main]
 
@@ -33,7 +33,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Build and run containers with image tags
+      - name: Build and run containers
         run: |
           docker-compose up -d --build
           sleep 15
@@ -45,7 +45,7 @@ jobs:
           wget $(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep browser_download_url | grep Linux-64bit.deb | cut -d '"' -f 4)
           sudo dpkg -i trivy_*_Linux-64bit.deb
 
-      - name: List built Docker images (debug)
+      - name: List Docker images (debug)
         run: docker images
 
       - name: Scan backend image with Trivy
@@ -58,16 +58,16 @@ jobs:
         if: always()
         run: docker-compose down
 
-      - name: Notify Slack - Success
+      - name: Notify Slack - Success (any branch)
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"✅ *DevFlow CI* passed (Trivy scan clean) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          --data '{"text":"✅ *DevFlow CI* passed (Trivy scan clean) on branch `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Notify Slack - Failure
+      - name: Notify Slack - Failure (any branch)
         if: failure()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"❌ *DevFlow CI* failed (Trivy or build error) on `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
+          --data '{"text":"❌ *DevFlow CI* failed (Trivy or build error) on branch `${{ github.ref_name }}` by `${{ github.actor }}`"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
